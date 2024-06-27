@@ -1,0 +1,7 @@
+1. [Hopcroft Karp算法](https://zh.wikipedia.org/wiki/%E9%9C%8D%E6%99%AE%E5%85%8B%E6%B4%9B%E5%A4%AB%E7%89%B9-%E5%8D%A1%E6%99%AE%E7%AE%97%E6%B3%95)
+2. [二分图最大匹配、完美匹配和匈牙利算法](https://www.renfei.org/blog/bipartite-matching.html)
+3. [二分图](https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%88%86%E5%9B%BE)
+4. [Tarjan算法](https://zh.wikipedia.org/wiki/Tarjan%E7%AE%97%E6%B3%95)
+5. [强连通分量](https://zh.wikipedia.org/wiki/%E5%BC%BA%E8%BF%9E%E9%80%9A%E5%88%86%E9%87%8F)
+6. [https://en.wikipedia.org/wiki/Pantelides_algorithm](https://en.wikipedia.org/wiki/Pantelides_algorithm)
+7. [状态变量](https://zh.wikipedia.org/wiki/%E7%8B%80%E6%85%8B%E8%AE%8A%E6%95%B8)

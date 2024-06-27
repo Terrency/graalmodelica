@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.koha</groupId>
+    <artifactId>modelica-parent</artifactId>
+    <version>3.0</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>language</module>
+        <module>launcher</module>
+        <module>standalone</module>
+        <module>tck</module>
+        <module>libs</module>
+        <module>python</module>
+        <module>optimization</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <graalvm.version>24.0.1</graalvm.version>
+        <kotlin.version>1.9.22</kotlin.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <launcherClass>cn.koha.modelica.launcher/cn.koha.modelica.launcher.MOMain</launcherClass>
+    </properties>
+</project>
