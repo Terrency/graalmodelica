@@ -4,15 +4,21 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
+import org.graalvm.shadowed.org.jline.terminal.Terminal;
+import org.graalvm.shadowed.org.jline.terminal.TerminalBuilder;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class MOMain {
+import static java.lang.System.exit;
+
+public final class MoLauncher {
 
     private static final String MO = "mo";
     private static String mainClassName = null;
+    private static boolean version = false;
+    private static boolean shell = false;
     /**
      * The main entry point.
      */
@@ -31,16 +37,31 @@ public final class MOMain {
                 }
             }
         }
-
-        if (mainClassName == null) {
-            // @formatter:off
-            source = Source.newBuilder(MO, new InputStreamReader(System.in), "<stdin>").interactive(!launcherOutput).build();
-            // @formatter:on
-        } else {
-            source = Source.newBuilder(MO, new File(mainClassName)).interactive(!launcherOutput).build();
+        final Context.Builder contextBuilder = Context.newBuilder().options(options);
+        contextBuilder.allowAllAccess(true);
+        setupContextBuilder(contextBuilder);
+        if(version) {
+            printVersion();
+            exit(0);
         }
+        if(shell) {
+            runShell(contextBuilder);
+        } else {
+            if (mainClassName == null) {
+                // @formatter:off
+                source = Source.newBuilder(MO, new InputStreamReader(System.in), "<stdin>").interactive(!launcherOutput).build();
+                // @formatter:on
+            } else {
+                source = Source.newBuilder(MO, new File(mainClassName)).interactive(!launcherOutput).build();
+            }
 
-        System.exit(executeSource(source, System.in, System.out, options, launcherOutput));
+            exit(executeSource(source, System.in, System.out, options, launcherOutput));
+        }
+    }
+
+    private static void setupContextBuilder(Context.Builder builder) {
+        builder.err(System.err);
+        builder.out(System.out);
     }
 
     private static int executeSource(Source source, InputStream in, PrintStream out, Map<String, String> options, boolean launcherOutput) {
@@ -99,6 +120,13 @@ public final class MOMain {
         if (value == null) {
             value = "true";
         }
+        if(arg.equals("version")) {
+            version = true;
+            return true;
+        } else if(key.equals("shell")) {
+            shell = true;
+            return true;
+        }
         int index = key.indexOf('.');
         String group = key;
         if (index >= 0) {
@@ -107,5 +135,19 @@ public final class MOMain {
         options.put(key, value);
         return true;
     }
-
+    private static void runShell(Context.Builder builder){
+        try(Context context = builder.build();
+        MoLanguageShell shell = new MoLanguageShell(context, createSystemTerminal())) {
+            shell.runRepl();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private static Terminal createSystemTerminal() throws IOException {
+        return TerminalBuilder.builder().jansi(true).jna(false).system(true).signalHandler(Terminal.SignalHandler.SIG_IGN).build();
+    }
+    private static void runScript(){}
+    private static void printVersion(){
+        System.out.println("graal modelica version v1.0 ");
+    }
 }
