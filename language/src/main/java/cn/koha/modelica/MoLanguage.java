@@ -67,7 +67,8 @@ public class MoLanguage extends TruffleLanguage<MoContext> {
 //        LapackLibrary lapack = new LapackLibrary(getCurrentContext(this.getClass()).getEnv());
 //        int flag = lapack.dgelsv(3, 1, new double[]{1, 2, 3, 2, -1, 0, 3, 1, -1}, Math.max(1, 3), new int[]{0, 0, 0}, new double[]{9, 8, 3}, 3, 0);
 //        System.out.println(flag);
-        return ModelicaTruffleVisitor.parse(this, request.getSource().getReader(), this.rootShape, this.objectPrototype).getCallTarget();
+        Source source = request.getSource();
+        return ModelicaTruffleVisitor.parse(this, source, this.rootShape, this.objectPrototype).getCallTarget();
     }
 
     @Override

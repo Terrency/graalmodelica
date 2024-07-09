@@ -1,15 +1,17 @@
-package cn.koha.modelica.parser;// Generated from F:/IdeaProject/testsuits/src/main/antlr\Modelica0_3.g4 by ANTLR 4.12.0
-
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.CharStream;
+// Generated from F:/graalmodelica/language/src/main/java/cn/koha/modelica/parser/Modelica0_3.g4 by ANTLR 4.13.1
+package cn.koha.modelica.parser;
 import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
-@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
+@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class Modelica0_3Lexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.12.0", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =

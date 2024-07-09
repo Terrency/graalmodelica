@@ -18,10 +18,7 @@ import cn.koha.modelica.nodes.expr.literals.*;
 import cn.koha.modelica.nodes.expr.logical.AndNode;
 import cn.koha.modelica.nodes.expr.logical.NotNodeGen;
 import cn.koha.modelica.nodes.expr.logical.OrNode;
-import cn.koha.modelica.nodes.expr.variables.GlobalVarReferenceExprNodeGen;
-import cn.koha.modelica.nodes.expr.variables.LocalArrayReferenceExprNodeGen;
-import cn.koha.modelica.nodes.expr.variables.LocalVarAssignmentExprNodeGen;
-import cn.koha.modelica.nodes.expr.variables.LocalVarReferenceExprNodeGen;
+import cn.koha.modelica.nodes.expr.variables.*;
 import cn.koha.modelica.nodes.MoScopedNode;
 import cn.koha.modelica.nodes.root.StmtBlockRootNode;
 import cn.koha.modelica.nodes.stmts.ExprStmtNode;
@@ -45,6 +42,7 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.object.Shape;
+import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.strings.TruffleString;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -56,13 +54,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
-    public static StmtBlockRootNode parse(MoLanguage lang, Reader program, Shape objectShape, ObjectPrototype objectPrototype) throws IOException {
-        Modelica0_3Lexer lexer = new Modelica0_3Lexer(CharStreams.fromReader(program));
+    public static StmtBlockRootNode parse(MoLanguage lang, Source source, Shape objectShape, ObjectPrototype objectPrototype) throws IOException {
+        Modelica0_3Lexer lexer = new Modelica0_3Lexer(CharStreams.fromReader(source.getReader()));
         Modelica0_3Parser parser = new Modelica0_3Parser(new CommonTokenStream(lexer));
         lexer.removeErrorListeners();
         parser.removeErrorListeners();
         ModelicaTruffleVisitor visitor = new ModelicaTruffleVisitor(objectShape, objectPrototype);
-        List<MoStmtNode> stmtNodes = visitor.visitStoredDefinition(parser.stored_definition());
+        List<MoStmtNode> stmtNodes;
+        if(!source.isInteractive()) {
+            stmtNodes = visitor.visitStoredDefinition(parser.stored_definition());
+        } else {
+            stmtNodes = List.of(visitor.visitStatement_comma(parser.statement_comma()));
+        }
         return new StmtBlockRootNode(lang, visitor.frameDescriptor.build(), new BlockStmtNode(stmtNodes));
     }
 
@@ -86,6 +89,15 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
 
     public List<MoStmtNode> visitStoredDefinition(Modelica0_3Parser.Stored_definitionContext ctx) {
         return visitClassDefinition(ctx.class_definition().get(0));
+    }
+    @Override
+    public MoStmtNode visitStatement_comma(Modelica0_3Parser.Statement_commaContext ctx) {
+        if(ctx.children.size() == 1) {
+            //直接输出
+        } else {
+            //结果保存到内存
+        }
+        return parseStmt(ctx.statement());
     }
 
     public List<MoStmtNode> visitClassDefinition(Modelica0_3Parser.Class_definitionContext ctx) {
@@ -370,8 +382,9 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
             // assign
             return null;
         } else if (ctx.component_reference() != null) {
-            // assign
-            return null;
+            String name = ctx.component_reference().getText();
+            MoExprNode initExpr = visitComponent_reference(ctx.component_reference());
+            return new ExprStmtNode(GlobalVarAssignmentExprNodeGen.create(GlobalScopeObjectExprNodeGen.create(), initExpr, name));
         } else if (ctx.if_statement() != null) {
             // if stmt
             return this.parseIfWhenStmt(ctx.if_statement());

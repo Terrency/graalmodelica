@@ -1,4 +1,5 @@
-package cn.koha.modelica.parser;// Generated from F:/IdeaProject/testsuits/src/main/antlr\Modelica0_3.g4 by ANTLR 4.12.0
+// Generated from F:/graalmodelica/language/src/main/java/cn/koha/modelica/parser/Modelica0_3.g4 by ANTLR 4.13.1
+package cn.koha.modelica.parser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -249,6 +250,12 @@ public interface Modelica0_3Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitEquation(Modelica0_3Parser.EquationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Modelica0_3Parser#statement_comma}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement_comma(Modelica0_3Parser.Statement_commaContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Modelica0_3Parser#statement}.
 	 * @param ctx the parse tree

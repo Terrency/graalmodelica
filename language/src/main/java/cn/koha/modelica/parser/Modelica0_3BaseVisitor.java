@@ -1,4 +1,5 @@
-package cn.koha.modelica.parser;// Generated from F:/IdeaProject/testsuits/src/main/antlr\Modelica0_3.g4 by ANTLR 4.12.0
+// Generated from F:/graalmodelica/language/src/main/java/cn/koha/modelica/parser/Modelica0_3.g4 by ANTLR 4.13.1
+package cn.koha.modelica.parser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -291,6 +292,13 @@ public class Modelica0_3BaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitEquation(Modelica0_3Parser.EquationContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitStatement_comma(Modelica0_3Parser.Statement_commaContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
