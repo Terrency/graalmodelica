@@ -383,7 +383,7 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
             return null;
         } else if (ctx.component_reference() != null) {
             String name = ctx.component_reference().getText();
-            MoExprNode initExpr = visitComponent_reference(ctx.component_reference());
+            MoExprNode initExpr = visitExpression(ctx.expression());
             return new ExprStmtNode(GlobalVarAssignmentExprNodeGen.create(GlobalScopeObjectExprNodeGen.create(), initExpr, name));
         } else if (ctx.if_statement() != null) {
             // if stmt
