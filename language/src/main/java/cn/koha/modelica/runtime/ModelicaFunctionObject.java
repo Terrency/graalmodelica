@@ -25,9 +25,18 @@ public final class ModelicaFunctionObject extends ModelicaObject {
     @ExportMessage
     boolean hasLanguage() { return true; }
     @ExportMessage
+    boolean isExecutable() {
+        return true;
+    }
+    @ExportMessage
     Class<? extends TruffleLanguage<?>> getLanguage() {
         return MoLanguage.class;
     }
     @ExportMessage
     Object toDisplayString(boolean allowSideEffects) { return "global"; }
+    @ExportMessage
+    Object execute(Object[] arguments) {
+        // for GraalVM polyglot calls, we never fill the receiver
+        return this.functionDispatchNode.executeDispatch(this, arguments, MoUndefined.INSTANCE);
+    }
 }

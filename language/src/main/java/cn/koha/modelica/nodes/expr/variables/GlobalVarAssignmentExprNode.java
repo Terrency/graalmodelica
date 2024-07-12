@@ -1,5 +1,6 @@
 package cn.koha.modelica.nodes.expr.variables;
 
+import cn.koha.modelica.common.DeclarationKind;
 import cn.koha.modelica.exceptions.MoException;
 import cn.koha.modelica.nodes.MoExprNode;
 import cn.koha.modelica.nodes.expr.GlobalScopeObjectExprNode;
@@ -23,12 +24,15 @@ public abstract class GlobalVarAssignmentExprNode extends MoExprNode {
         String name = this.getName();
         Property property = objectLibrary.getProperty(globalScopeObject, name);
         if (property == null) {
-            throw new MoException("'" + name + "' is not defined", this);
+            objectLibrary.putWithFlags(globalScopeObject, name, value, 0);
+//            throw new MoException("'" + name + "' is not defined", this);
+        } else {
+            if (property.getFlags() == 1) {
+                // 常量不允许再赋值
+                throw new MoException("Assignment to constant variable '" + name + "' is not allowed");
+            }
+            objectLibrary.put(globalScopeObject, name, value);
         }
-        if (property.getFlags() == 1) {
-            throw new MoException("Assignment to constant variable '" + name + "' is not allowed");
-        }
-        objectLibrary.put(globalScopeObject, name, value);
         return value;
     }
 

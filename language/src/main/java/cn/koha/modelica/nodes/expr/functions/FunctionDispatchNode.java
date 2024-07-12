@@ -11,7 +11,7 @@ import com.oracle.truffle.api.nodes.IndirectCallNode;
 import com.oracle.truffle.api.nodes.Node;
 
 public abstract class FunctionDispatchNode extends Node {
-    protected abstract Object executeDispatch(Object function, Object[] arguments, Object receiver);
+    public abstract Object executeDispatch(Object function, Object[] arguments, Object receiver);
 
     @Specialization(guards = "function.callTarget == directCallNode.getCallTarget()", limit = "2")
     protected static Object dispatchDirectly(

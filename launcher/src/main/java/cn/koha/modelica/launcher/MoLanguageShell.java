@@ -28,8 +28,8 @@ public class MoLanguageShell implements Closeable {
         printUsage();
         while(true) {
             try {
-                input += reader.readLine() + "\n";
-                if(eval()) {
+                input += reader.readLine(prompt()) + "\n";
+                if(handleBuiltins() || eval()) {
                     reader.getHistory().add(input);
                     input = "";
                 }
@@ -38,12 +38,18 @@ public class MoLanguageShell implements Closeable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            break;
         }
         return 0;
     }
+    private boolean handleBuiltins() {
+        final String trimmedInput = input.trim();
+        if(trimmedInput.equals("")) {
+            return true;
+        }
+        return false;
+    }
     public void printHeader() {
-        println("Graal Modelica Language Shell " + context.getEngine().getVersion());
+        println("Graal Modelica Language Shell v1.0");
         println("Copyright (c) 2024, Modelica");
     }
     public void printUsage() {
@@ -56,8 +62,7 @@ public class MoLanguageShell implements Closeable {
         reader.getWidgets().put("CHANGE_LANGUAGE_WIDGET", () -> { throw new RuntimeException(); });
     }
     private String prompt() {
-        final String prompt = createPrompt(language);
-        return input.equals("") ? prompt : createBufferPrompt(prompt);
+        return createPrompt(language);
     }
     private static String createPrompt(Language language) {
         return String.format("%s> ", language.getId());

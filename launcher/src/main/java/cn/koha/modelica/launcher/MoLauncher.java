@@ -39,7 +39,6 @@ public final class MoLauncher {
         }
         final Context.Builder contextBuilder = Context.newBuilder().options(options);
         contextBuilder.allowAllAccess(true);
-        setupContextBuilder(contextBuilder);
         if(version) {
             printVersion();
             exit(0);
@@ -57,11 +56,6 @@ public final class MoLauncher {
 
             exit(executeSource(source, System.in, System.out, options, launcherOutput));
         }
-    }
-
-    private static void setupContextBuilder(Context.Builder builder) {
-        builder.err(System.err);
-        builder.out(System.out);
     }
 
     private static int executeSource(Source source, InputStream in, PrintStream out, Map<String, String> options, boolean launcherOutput) {
@@ -136,15 +130,16 @@ public final class MoLauncher {
         return true;
     }
     private static void runShell(Context.Builder builder){
-        try(Context context = builder.build();
-        MoLanguageShell shell = new MoLanguageShell(context, createSystemTerminal())) {
+        try(Terminal terminal = createSystemTerminal();
+            Context context = builder.out(terminal.output()).build();
+            MoLanguageShell shell = new MoLanguageShell(context, terminal)) {
             shell.runRepl();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
     private static Terminal createSystemTerminal() throws IOException {
-        return TerminalBuilder.builder().jansi(true).jna(false).system(true).signalHandler(Terminal.SignalHandler.SIG_IGN).build();
+        return TerminalBuilder.builder().streams(System.in, System.out).dumb(true).jansi(true).jna(false).system(true).signalHandler(Terminal.SignalHandler.SIG_IGN).build();
     }
     private static void runScript(){}
     private static void printVersion(){

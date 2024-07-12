@@ -14,7 +14,7 @@ public class ArrayObject extends ModelicaObject {
     private int size;
     protected Object[] elements;
 
-    public ArrayObject(Shape shape, ClassPrototypeObject arrayPrototype, Object[] elements) {
+    protected ArrayObject(Shape shape, ClassPrototypeObject arrayPrototype, Object[] elements) {
         super(shape, arrayPrototype);
         this.size = elements.length;
         this.setElements(elements, DynamicObjectLibrary.getUncached());
@@ -74,20 +74,14 @@ public class ArrayObject extends ModelicaObject {
         library.putInt(this, "size", this.elements.length);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        sb.append(this.size);
-        sb.append("]");
-        sb.append("{");
-        if (elements != null) {
-            for (int i = 0; i < elements.length; i++) {
-                sb.append(elements[i]);
-                if (i != elements.length - 1) sb.append(", ");
+    public static MatrixObject vector2Matrix(VectorObject source, Shape shape, ClassPrototypeObject prototype, int n) {
+        int m = source.getArraySize();
+        Object[] target = new Object[m * n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                target[i * m + j] = source.readArrayElement(i);
             }
         }
-        sb.append("}");
-        return sb.toString();
+        return new MatrixObject(shape, prototype, m, n, target);
     }
 }

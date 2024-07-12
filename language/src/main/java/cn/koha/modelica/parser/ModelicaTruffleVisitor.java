@@ -8,6 +8,7 @@ import cn.koha.modelica.MoLanguage;
 import cn.koha.modelica.common.DeclarationKind;
 import cn.koha.modelica.nodes.MoExprNode;
 import cn.koha.modelica.nodes.expr.RangeNodeGen;
+import cn.koha.modelica.nodes.expr.RangeStepNodeGen;
 import cn.koha.modelica.nodes.expr.arithmetic.*;
 import cn.koha.modelica.nodes.expr.arrays.ArrayLiteralExprNode;
 import cn.koha.modelica.nodes.expr.arrays.ArrayWriteExprNodeGen;
@@ -97,7 +98,11 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
         } else {
             //结果保存到内存
         }
-        return parseStmt(ctx.statement());
+        if(ctx.statement() != null) {
+            return parseStmt(ctx.statement());
+        } else {
+            return new ExprStmtNode(visitExpression(ctx.expression()));
+        }
     }
 
     public List<MoStmtNode> visitClassDefinition(Modelica0_3Parser.Class_definitionContext ctx) {
@@ -486,8 +491,11 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
         MoExprNode start = visitLogical_expression(ctx.logical_expression(0));
         MoExprNode end = visitLogical_expression(ctx.logical_expression(size - 1));
         MoExprNode step = size == 2 ? null : visitLogical_expression(ctx.logical_expression(1));
-
-        return RangeNodeGen.create(start, end, step);
+        if(step == null) {
+            return RangeNodeGen.create(start, end);
+        } else {
+            return RangeStepNodeGen.create(start, end, step);
+        }
     }
 
     @Override
@@ -594,8 +602,7 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
                     result = DivNodeGen.create(left, right);
                     break;
                 case ".*":
-                    // TODO missing .*
-                    result = MulNodeGen.create(left, right);
+                    result = DotMulNodeGen.create(left, right);
                     break;
                 case "./":
                     // TODO missing ./

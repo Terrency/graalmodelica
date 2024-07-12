@@ -13,9 +13,31 @@ public final class MatrixObject extends ArrayObject {
     @DynamicField
     private final int n;
 
-    public MatrixObject(Shape shape, ClassPrototypeObject arrayPrototype, int m, int n, Object[][] elements) {
-        super(shape, arrayPrototype, Arrays.stream(elements).flatMap(Arrays::stream).toArray());
+    public MatrixObject(Shape shape, ClassPrototypeObject arrayPrototype, int m, int n, Object[] elements) {
+        super(shape, arrayPrototype, elements);
         this.m = m;
         this.n = n;
+    }
+    public int getM(){ return m; }
+    public int getN(){ return n; }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        for (int i = 0; i < m; i++) {
+            sb.append("{");
+            for (int j = 0; j < n; j++) {
+                sb.append(this.elements[i * m + j]);
+                if (j < n - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("}");
+            if (i < m - 1) {
+                sb.append(", \n");
+            }
+        }
+        sb.append("\n}");
+        return sb.toString();
     }
 }

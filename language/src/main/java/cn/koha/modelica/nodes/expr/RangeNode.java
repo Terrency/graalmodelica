@@ -1,6 +1,8 @@
 package cn.koha.modelica.nodes.expr;
 
 import cn.koha.modelica.nodes.MoExprNode;
+import cn.koha.modelica.runtime.ArrayObject;
+import cn.koha.modelica.runtime.VectorObject;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
@@ -8,21 +10,15 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 @NodeInfo(shortName = "range")
 @NodeChild("start")
 @NodeChild("end")
-@NodeChild("step")
 public abstract class RangeNode extends MoExprNode {
-    private boolean initialized = false;
-    private int current = -1;
 
     @Specialization
-    protected int doInt(int start, int end, int step) {
-        if (!initialized) {
-            initialized = true;
-            current = start;
-            if (end < start) return -1;
-        } else {
-            current += 1;
-            if (current > end) return -1;
+    protected VectorObject doInt(int start, int end) {
+        Integer[] arrayElement = new Integer[end-start + 1];
+        for(int i=0; i<= end-start; i++){
+            arrayElement[i] = start + i;
         }
-        return current;
+        return new VectorObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
+                this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, arrayElement);
     }
 }

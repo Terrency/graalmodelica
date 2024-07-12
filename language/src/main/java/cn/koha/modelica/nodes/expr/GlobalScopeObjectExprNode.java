@@ -8,7 +8,6 @@ import com.oracle.truffle.api.object.DynamicObject;
 public abstract class GlobalScopeObjectExprNode extends MoExprNode {
     @Specialization
     protected DynamicObject returnGlobalScopeObject() {
-//        return currentLanguageContext()
-        return null;
+        return this.currentLanguageContext().globalScopeObject;
     }
 }

@@ -73,4 +73,8 @@ public class ModelicaObject extends DynamicObject {
                      @CachedLibrary("this") DynamicObjectLibrary thisObjectLibrary) {
         thisObjectLibrary.put(this, member, value);
     }
+
+    public DynamicObject getPrototype() {
+        return prototype;
+    }
 }
