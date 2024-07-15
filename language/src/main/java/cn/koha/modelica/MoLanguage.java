@@ -99,7 +99,9 @@ public class MoLanguage extends TruffleLanguage<MoContext> {
     }
 
     private DynamicObject createGlobalScopeObject(DynamicObjectLibrary objectLibrary) {
-        return new GlobalScopeObject(this.rootShape);
+        GlobalScopeObject globalScopeObject = new GlobalScopeObject(this.rootShape);
+//        objectLibrary.putConstant(globalScopeObject, "transpose", this.createTranspose(objectLibrary), 0);
+        return globalScopeObject;
     }
     private ShapesAndPrototypes createShapesAndPrototypes(DynamicObjectLibrary dynamicObjectLibrary) {
         ClassPrototypeObject arrayPrototype = new ClassPrototypeObject(this.rootShape, "Array", this.objectPrototype);

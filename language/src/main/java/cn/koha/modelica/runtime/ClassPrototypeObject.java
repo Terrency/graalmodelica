@@ -22,6 +22,6 @@ public class ClassPrototypeObject extends ModelicaObject {
 
     @ExportMessage
     public Object toDisplayString(@SuppressWarnings("unused") boolean allowSideEffects) {
-        return this.toString();
+        return "[class]";
     }
 }

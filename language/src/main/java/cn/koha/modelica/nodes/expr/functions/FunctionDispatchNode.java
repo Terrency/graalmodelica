@@ -45,11 +45,11 @@ public abstract class FunctionDispatchNode extends Node {
      * doesn't evaluate to a function.
      */
     @Fallback
-    protected static Object targetIsNotAFunction(
+    protected static void targetIsNotAFunction(
             Object nonFunction,
             @SuppressWarnings("unused") Object[] arguments,
             @SuppressWarnings("unused") Object receiver) {
-        throw new MoException("'" + nonFunction + "' is not a function");
+        throw new MoException(" is not a function");
     }
 
     private static Object[] extendArguments(Object[] arguments, Object receiver, ModelicaFunctionObject function) {

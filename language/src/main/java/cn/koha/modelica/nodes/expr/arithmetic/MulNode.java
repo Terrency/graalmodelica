@@ -76,8 +76,10 @@ public abstract class MulNode extends BinaryNode {
         Integer[] result = new Integer[m * n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                result[i*m + j] = (int) left.readArrayElement(i * left.getM() + j);
-                //todo 累加未完成
+                result[i * m + j] = 0;
+                for (int k = 0; k < n; k++) {
+                    result[i * m + j] += (int) left.readArrayElement(i * left.getM() + k) * (int) right.readArrayElement(k * right.getM() + j);
+                }
             }
         }
         return new MatrixObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,

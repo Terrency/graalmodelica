@@ -1,5 +1,6 @@
 package cn.koha.modelica.parser;
 
+import cn.koha.modelica.builtins.arrays.MoTransposeNodeGen;
 import cn.koha.modelica.builtins.derivative.DerNode;
 import cn.koha.modelica.builtins.event.InitialNode;
 import cn.koha.modelica.common.LocalVariableFrameSlotId;
@@ -47,6 +48,7 @@ import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.strings.TruffleString;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.atn.PredicateTransition;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.IOException;
@@ -85,6 +87,7 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
         classPrototypes.put("Enum", new ClassPrototypeMember(objectPrototype));
         Map<String, FrameMember> realPrototypes = new HashMap<>();
         classPrototypes.put("Real", new ClassPrototypeMember(objectPrototype));
+        classPrototypes.put("transpose", new BuiltinMember());
         this.localScopes.push(classPrototypes);
     }
 
@@ -388,8 +391,19 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
             return null;
         } else if (ctx.component_reference() != null) {
             String name = ctx.component_reference().getText();
-            MoExprNode initExpr = visitExpression(ctx.expression());
-            return new ExprStmtNode(GlobalVarAssignmentExprNodeGen.create(GlobalScopeObjectExprNodeGen.create(), initExpr, name));
+            if(ctx.expression() != null) {
+                MoExprNode initExpr = visitExpression(ctx.expression());
+                return new ExprStmtNode(GlobalVarAssignmentExprNodeGen.create(GlobalScopeObjectExprNodeGen.create(), initExpr, name));
+            } else {
+                List<MoExprNode> args = ctx.function_call_args().function_arguments() != null ? visitFunctionArguments(ctx.function_call_args().function_arguments()) : Collections.emptyList();
+                switch (name) {
+                    case "transpose":
+                        return new ExprStmtNode(MoTransposeNodeGen.create(args.get(0)));
+                    default:
+                        MoExprNode refer = this.parseReference(name);
+                        return new ExprStmtNode(new FunctionCallExprNode(refer, args));
+                }
+            }
         } else if (ctx.if_statement() != null) {
             // if stmt
             return this.parseIfWhenStmt(ctx.if_statement());
@@ -932,12 +946,19 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
         String name = ctx.getText();
         return parseReference(name);
     }
-
+    private boolean isBuiltinReference(String name) {
+        switch (name) {
+            case "transpose":
+                return true;
+            default:
+                return false;
+        }
+    }
     private MoExprNode parseReference(String name) {
         FrameMember fm = this.findFrameMember(name);
         if (fm == null || fm instanceof ClassPrototypeMember) {
             return GlobalVarReferenceExprNodeGen.create(GlobalScopeObjectExprNodeGen.create(), name);
-        } else {
+        }  else {
             return fm instanceof FunctionArgument
                     ? new ReadFunctionArgExprNode(((FunctionArgument) fm).argumentIndex)
                     : LocalVarReferenceExprNodeGen.create(((LocalVariable) fm).variableIndex);
@@ -982,7 +1003,11 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
             this.argumentIndex = argumentIndex;
         }
     }
+    private static final class BuiltinMember extends FrameMember {
 
+        BuiltinMember() {
+        }
+    }
     public static final class LocalVariable extends FrameMember {
         public final int variableIndex;
         public final DeclarationKind declarationKind;
