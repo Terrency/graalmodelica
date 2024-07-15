@@ -1,6 +1,6 @@
 package cn.koha.modelica.parser;
 
-import cn.koha.modelica.builtins.arrays.MoTransposeNodeGen;
+import cn.koha.modelica.builtins.arrays.*;
 import cn.koha.modelica.builtins.derivative.DerNode;
 import cn.koha.modelica.builtins.event.InitialNode;
 import cn.koha.modelica.common.LocalVariableFrameSlotId;
@@ -399,6 +399,18 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
                 switch (name) {
                     case "transpose":
                         return new ExprStmtNode(MoTransposeNodeGen.create(args.get(0)));
+                    case "ndims":
+                        return new ExprStmtNode(MoNdimsNodeGen.create(args.get(0)));
+                    case "size":
+                        if(args.size() == 1) {
+                            return new ExprStmtNode(MoSizeNodeGen.create(args.get(0)));
+                        } else {
+                            return new ExprStmtNode(MoSizeNdimNodeGen.create(args.get(0), args.get(1)));
+                        }
+                    case "scalar":
+                        return new ExprStmtNode(MoScalarNodeGen.create(args.get(0)));
+                    case "vector":
+                        return new ExprStmtNode(MoVectorNodeGen.create(args.get(0)));
                     default:
                         MoExprNode refer = this.parseReference(name);
                         return new ExprStmtNode(new FunctionCallExprNode(refer, args));

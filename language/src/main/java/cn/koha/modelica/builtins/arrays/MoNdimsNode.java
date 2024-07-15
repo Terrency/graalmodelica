@@ -1,14 +1,15 @@
 package cn.koha.modelica.builtins.arrays;
 
-import cn.koha.modelica.builtins.MoBuiltinNode;
-import cn.koha.modelica.runtime.ArrayObject;
+import cn.koha.modelica.nodes.MoExprNode;
 import cn.koha.modelica.runtime.MatrixObject;
 import cn.koha.modelica.runtime.VectorObject;
+import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
 @NodeInfo(shortName = "ndims")
-public abstract class MoNdimsNode extends MoBuiltinNode {
+@NodeChild("array")
+public abstract class MoNdimsNode extends MoExprNode {
     @Specialization
     protected int ndims(int i) {
         return 0;
