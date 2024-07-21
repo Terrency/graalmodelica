@@ -7,12 +7,12 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 @NodeInfo(shortName = "abs")
 public abstract class MoAbsNode extends MoExprNode {
     @Specialization
-    public int doAbs(int a) {
+    public int doInt(int a) {
         if (a >= 0) return a;
         else return -a;
     }
     @Specialization
-    public double doAbs(double a) {
+    public double doReal(double a) {
         if (a >= 0) return a;
         else return -a;
     }

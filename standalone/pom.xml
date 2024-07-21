@@ -80,7 +80,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>C:\Users\Administrator\.jdks\graalvm-jdk-22+36.1\bin\native-image.cmd</executable>
+                                    <executable>C:\Users\hubei\.jdks\graalvm-jdk-22+36.1\bin\native-image.cmd</executable>
                                     <commandlineArgs>
                                         -p %classpath
                                         -H:+ReportExceptionStackTraces
