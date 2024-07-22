@@ -94,6 +94,18 @@
             <artifactId>jline</artifactId>
             <version>24.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>3.26.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline-terminal-jansi</artifactId>
+            <version>3.26.3</version>
+        </dependency>
+
 
     </dependencies>
 

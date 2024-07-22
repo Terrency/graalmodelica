@@ -3,7 +3,7 @@ package cn.koha.modelica.nodes.expr.arithmetic;
 import cn.koha.modelica.exceptions.MoException;
 import cn.koha.modelica.nodes.expr.BinaryNode;
 import cn.koha.modelica.nodes.util.MoToTruffleStringNode;
-import cn.koha.modelica.runtime.ArrayObject;
+import cn.koha.modelica.runtime.ArrayBaseObject;
 import cn.koha.modelica.runtime.MatrixObject;
 import cn.koha.modelica.runtime.MoStrings;
 import cn.koha.modelica.runtime.VectorObject;
@@ -13,6 +13,9 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.strings.TruffleString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NodeInfo(shortName = "+")
 public abstract class AddNode extends BinaryNode {
@@ -28,9 +31,9 @@ public abstract class AddNode extends BinaryNode {
 
     @Specialization
     public VectorObject doIntVector(int left, VectorObject right) {
-        Integer[] result = new Integer[right.getArraySize()];
+        List<Object> result = new ArrayList<>();
         for (int i = 0; i < right.getArraySize(); i++) {
-            result[i] = Math.addExact(left, (int) right.readArrayElement(i));
+            result.add(Math.addExact(left, (int) right.readArrayElement(i)));
         }
         return new VectorObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
                 this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, result);
@@ -43,9 +46,9 @@ public abstract class AddNode extends BinaryNode {
 
     @Specialization
     public VectorObject doVectorVector(VectorObject left, VectorObject right) {
-        Integer[] result = new Integer[right.getArraySize()];
+        List<Object> result = new ArrayList<>();
         for (int i = 0; i < right.getArraySize(); i++) {
-            result[i] = Math.addExact((int) left.readArrayElement(i), (int) right.readArrayElement(i));
+            result.add(Math.addExact((int) left.readArrayElement(i), (int) right.readArrayElement(i)));
         }
         return new VectorObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
                 this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, result);
@@ -53,9 +56,9 @@ public abstract class AddNode extends BinaryNode {
 
     @Specialization
     public MatrixObject doMatrixMatrix(MatrixObject left, MatrixObject right) {
-        Integer[] result = new Integer[left.getArraySize()];
+        List<Object> result = new ArrayList<>();
         for (int i = 0; i < right.getArraySize(); i++) {
-            result[i] = Math.addExact((int) left.readArrayElement(i), (int) right.readArrayElement(i));
+            result.add(Math.addExact((int) left.readArrayElement(i), (int) right.readArrayElement(i)));
         }
         return new MatrixObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
                 this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, left.getM(), left.getN(), result);
@@ -63,9 +66,9 @@ public abstract class AddNode extends BinaryNode {
 
     @Specialization
     public MatrixObject doMatrixInt(MatrixObject left, int right) {
-        Integer[] result = new Integer[left.getArraySize()];
+        List<Object> result = new ArrayList<>();
         for (int i = 0; i < left.getArraySize(); i++) {
-            result[i] = Math.addExact((int) left.readArrayElement(i), right);
+            result.add(Math.addExact((int) left.readArrayElement(i), right));
         }
         return new MatrixObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
                 this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, left.getM(), left.getN(), result);
@@ -81,7 +84,7 @@ public abstract class AddNode extends BinaryNode {
         if (right.getArraySize() != left.getM()) {
             throw new MoException("Vector size is not match Matrix");
         }
-        MatrixObject rightM = ArrayObject.vector2Matrix(right, this.currentLanguageContext().shapesAndPrototypes.arrayShape, this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, left.getN());
+        MatrixObject rightM = ArrayBaseObject.vector2Matrix(right, this.currentLanguageContext().shapesAndPrototypes.arrayShape, this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, left.getN());
         return doMatrixMatrix(left, rightM);
     }
 

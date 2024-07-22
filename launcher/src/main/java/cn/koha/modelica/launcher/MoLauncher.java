@@ -4,8 +4,8 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
-import org.graalvm.shadowed.org.jline.terminal.Terminal;
-import org.graalvm.shadowed.org.jline.terminal.TerminalBuilder;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import java.io.*;
 import java.util.HashMap;
@@ -139,7 +139,7 @@ public final class MoLauncher {
         }
     }
     private static Terminal createSystemTerminal() throws IOException {
-        return TerminalBuilder.builder().streams(System.in, System.out).dumb(true).jansi(true).jna(false).system(true).signalHandler(Terminal.SignalHandler.SIG_IGN).build();
+        return TerminalBuilder.builder().streams(System.in, System.out).system(true).build();
     }
     private static void runScript(){}
     private static void printVersion(){

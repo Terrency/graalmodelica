@@ -2,10 +2,12 @@ package cn.koha.modelica.builtins.math;
 
 import cn.koha.modelica.exceptions.MoException;
 import cn.koha.modelica.nodes.MoExprNode;
+import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
 @NodeInfo(shortName = "Integer")
+@NodeChild("value")
 public abstract class MoIntegerNode extends MoExprNode {
     @Specialization
     public double doInt(int a) {

@@ -4,16 +4,16 @@ import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.library.ExportLibrary;
 import com.oracle.truffle.api.object.Shape;
 
-import java.util.Arrays;
+import java.util.List;
 
 @ExportLibrary(InteropLibrary.class)
-public final class MatrixObject extends ArrayObject {
+public final class MatrixObject extends ArrayBaseObject {
     @DynamicField
     private final int m;
     @DynamicField
     private final int n;
 
-    public MatrixObject(Shape shape, ClassPrototypeObject arrayPrototype, int m, int n, Object[] elements) {
+    public MatrixObject(Shape shape, ClassPrototypeObject arrayPrototype, int m, int n, List<Object> elements) {
         super(shape, arrayPrototype, elements);
         this.m = m;
         this.n = n;

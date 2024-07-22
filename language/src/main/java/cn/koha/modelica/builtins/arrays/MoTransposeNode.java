@@ -6,6 +6,9 @@ import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NodeInfo(shortName = "transpose")
 @NodeChild("target")
 public abstract class MoTransposeNode extends MoExprNode {
@@ -13,10 +16,10 @@ public abstract class MoTransposeNode extends MoExprNode {
     public MatrixObject doMatrix(MatrixObject target) {
         int m = target.getM();
         int n = target.getN();
-        Integer[] result = new Integer[target.getM() * target.getN()];
+        List<Object> result = new ArrayList<>();
         for(int i=0; i< n; i++){
             for(int j=0; j<m; j++){
-                result[i*n + j] = (int) target.readArrayElement(j*m + i);
+                result.add(target.readArrayElement(j*m + i));
             }
         }
         return new MatrixObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,

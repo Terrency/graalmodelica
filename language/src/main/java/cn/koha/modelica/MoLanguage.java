@@ -39,7 +39,7 @@ public class MoLanguage extends TruffleLanguage<MoContext> {
     private static final Source BUILTIN_SOURCE = Source.newBuilder(MoLanguage.ID, "", "MO builtin").build();
     private final Map<NodeFactory<? extends MoBuiltinNode>, RootCallTarget> builtinTargets = new ConcurrentHashMap<>();
     private final Shape rootShape = Shape.newBuilder().build();
-    private final Shape arrayShape = Shape.newBuilder().layout(ArrayObject.class).build();
+    private final Shape arrayShape = Shape.newBuilder().layout(ArrayBaseObject.class).build();
     private final ObjectPrototype objectPrototype = new ObjectPrototype(this.rootShape);
     private final ClassPrototypeObject functionPrototype = new ClassPrototypeObject(this.rootShape, "Function", this.objectPrototype);
     private static final LanguageReference<MoLanguage> REFERENCE = LanguageReference.create(MoLanguage.class);

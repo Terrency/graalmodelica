@@ -2,11 +2,14 @@ package cn.koha.modelica.nodes.expr.arithmetic;
 
 import cn.koha.modelica.exceptions.MoException;
 import cn.koha.modelica.nodes.expr.BinaryNode;
-import cn.koha.modelica.runtime.ArrayObject;
+import cn.koha.modelica.runtime.ArrayBaseObject;
 import cn.koha.modelica.runtime.MatrixObject;
 import cn.koha.modelica.runtime.VectorObject;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NodeInfo(shortName = "*")
 public abstract class MulNode extends BinaryNode {
@@ -17,9 +20,9 @@ public abstract class MulNode extends BinaryNode {
 
     @Specialization
     protected VectorObject doIntVector(int left, VectorObject right) {
-        Integer[] result = new Integer[right.getArraySize()];
+        List<Object> result = new ArrayList<>();
         for (int i = 0; i < right.getArraySize(); i++) {
-            result[i] = Math.multiplyExact(left, (int) right.readArrayElement(i));
+            result.add(Math.multiplyExact(left, (int) right.readArrayElement(i)));
         }
         return new VectorObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
                 this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, result);
@@ -32,9 +35,9 @@ public abstract class MulNode extends BinaryNode {
 
     @Specialization
     protected MatrixObject doIntMatrix(int left, MatrixObject right) {
-        Integer[] result = new Integer[right.getM() * right.getN()];
+        List<Object> result = new ArrayList<>();
         for (int i = 0; i < right.getArraySize(); i++) {
-            result[i] = Math.multiplyExact(left, (int) right.readArrayElement(i));
+            result.add(Math.multiplyExact(left, (int) right.readArrayElement(i)));
         }
         return new MatrixObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
                 this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, right.getM(), right.getN(), result);
@@ -50,12 +53,13 @@ public abstract class MulNode extends BinaryNode {
         if (left.getN() != right.getArraySize()) {
             throw new MoException("Matrix n dims is not matched Vector size");
         }
-        Integer[] result = new Integer[left.getM()];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = 0;
+        List<Object> result = new ArrayList<>();
+        for (int i = 0; i < left.getM(); i++) {
+            int lineI = 0;
             for (int j = 0; j < right.getArraySize(); j++) {
-                result[i] += Math.multiplyExact((int) left.readArrayElement(i * left.getM() + j), (int) right.readArrayElement(j));
+                lineI += Math.multiplyExact((int) left.readArrayElement(i * left.getM() + j), (int) right.readArrayElement(j));
             }
+            result.add(lineI);
         }
         return new VectorObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
                 this.currentLanguageContext().shapesAndPrototypes.arrayPrototype, result);
@@ -73,13 +77,14 @@ public abstract class MulNode extends BinaryNode {
         }
         int m = left.getM();
         int n = right.getN();
-        Integer[] result = new Integer[m * n];
+        List<Object> result = new ArrayList<>();
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                result[i * m + j] = 0;
+                int lineIJ = 0;
                 for (int k = 0; k < n; k++) {
-                    result[i * m + j] += (int) left.readArrayElement(i * left.getM() + k) * (int) right.readArrayElement(k * right.getM() + j);
+                    lineIJ += (int) left.readArrayElement(i * left.getM() + k) * (int) right.readArrayElement(k * right.getM() + j);
                 }
+                result.add(lineIJ);
             }
         }
         return new MatrixObject(this.currentLanguageContext().shapesAndPrototypes.arrayShape,
@@ -87,7 +92,7 @@ public abstract class MulNode extends BinaryNode {
     }
 
     @Specialization
-    protected int doArray(ArrayObject left, ArrayObject right) {
+    protected int doArray(ArrayBaseObject left, ArrayBaseObject right) {
         if (left.getArraySize() != right.getArraySize()) {
             throw new MoException("Array not matched, left length is " + left.getArraySize() + ", right length is " + right.getArraySize());
         }

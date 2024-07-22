@@ -5,7 +5,7 @@ import org.graalvm.polyglot.Language;
 import org.graalvm.polyglot.Source;
 import org.graalvm.shadowed.org.jline.reader.*;
 import org.graalvm.shadowed.org.jline.reader.impl.history.DefaultHistory;
-import org.graalvm.shadowed.org.jline.terminal.Terminal;
+import org.jline.terminal.Terminal;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class MoLanguageShell implements Closeable {
         println("  Type ? for help");
     }
     private void resetLineReader() {
-        reader = LineReaderBuilder.builder().terminal(terminal).appName("GraalVM Modelica Shell " + context.getEngine().getVersion())
+        reader = LineReaderBuilder.builder().appName("GraalVM Modelica Shell " + context.getEngine().getVersion())
                 .history(history).build();
         reader.getWidgets().put("CHANGE_LANGUAGE_WIDGET", () -> { throw new RuntimeException(); });
     }

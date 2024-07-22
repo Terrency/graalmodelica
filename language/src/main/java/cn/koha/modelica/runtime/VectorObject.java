@@ -4,10 +4,12 @@ import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.library.ExportLibrary;
 import com.oracle.truffle.api.object.Shape;
 
-@ExportLibrary(InteropLibrary.class)
-public final class VectorObject extends ArrayObject {
+import java.util.List;
 
-    public VectorObject(Shape shape, ClassPrototypeObject arrayPrototype, Object[] elements) {
+@ExportLibrary(InteropLibrary.class)
+public final class VectorObject extends ArrayBaseObject {
+
+    public VectorObject(Shape shape, ClassPrototypeObject arrayPrototype, List<Object> elements) {
         super(shape, arrayPrototype, elements);
     }
     @Override
