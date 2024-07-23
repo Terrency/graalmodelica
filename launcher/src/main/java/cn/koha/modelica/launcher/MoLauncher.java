@@ -139,7 +139,7 @@ public final class MoLauncher {
         }
     }
     private static Terminal createSystemTerminal() throws IOException {
-        return TerminalBuilder.builder().streams(System.in, System.out).system(true).build();
+        return TerminalBuilder.builder().streams(System.in, System.out).dumb(true).jansi(true).jna(false).system(true).signalHandler(Terminal.SignalHandler.SIG_IGN).build();
     }
     private static void runScript(){}
     private static void printVersion(){

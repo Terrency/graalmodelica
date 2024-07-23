@@ -3,8 +3,8 @@ package cn.koha.modelica.launcher;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Language;
 import org.graalvm.polyglot.Source;
-import org.graalvm.shadowed.org.jline.reader.*;
-import org.graalvm.shadowed.org.jline.reader.impl.history.DefaultHistory;
+import org.jline.reader.*;
+import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 
 import java.io.Closeable;
@@ -43,7 +43,7 @@ public class MoLanguageShell implements Closeable {
     }
     private boolean handleBuiltins() {
         final String trimmedInput = input.trim();
-        if(trimmedInput.equals("")) {
+        if(trimmedInput.isEmpty()) {
             return true;
         }
         return false;
