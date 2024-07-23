@@ -58,7 +58,7 @@ public class MoLanguageShell implements Closeable {
     }
     private void resetLineReader() {
         reader = LineReaderBuilder.builder().appName("GraalVM Modelica Shell " + context.getEngine().getVersion())
-                .history(history).build();
+                .history(history).terminal(this.terminal).build();
         reader.getWidgets().put("CHANGE_LANGUAGE_WIDGET", () -> { throw new RuntimeException(); });
     }
     private String prompt() {
