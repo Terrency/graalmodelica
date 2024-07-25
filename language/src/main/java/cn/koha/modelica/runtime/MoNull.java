@@ -8,6 +8,6 @@ public final class MoNull implements TruffleObject {
 
     @Override
     public String toString() {
-        return "NULL";
+        return "";
     }
 }

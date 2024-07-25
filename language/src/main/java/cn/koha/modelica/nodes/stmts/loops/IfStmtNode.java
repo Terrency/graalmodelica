@@ -3,7 +3,7 @@ package cn.koha.modelica.nodes.stmts.loops;
 import cn.koha.modelica.exceptions.MoException;
 import cn.koha.modelica.nodes.MoExprNode;
 import cn.koha.modelica.nodes.stmts.MoStmtNode;
-import cn.koha.modelica.runtime.MoUndefined;
+import cn.koha.modelica.runtime.MoNull;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
@@ -45,7 +45,7 @@ public class IfStmtNode extends MoStmtNode {
         } catch (UnexpectedResultException e) {
             throw new MoException("error", condition);
         }
-        return MoUndefined.INSTANCE;
+        return MoNull.SINGLETON;
 
     }
 }

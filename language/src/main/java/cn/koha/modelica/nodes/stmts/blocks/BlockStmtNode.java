@@ -1,7 +1,7 @@
 package cn.koha.modelica.nodes.stmts.blocks;
 
 import cn.koha.modelica.nodes.stmts.MoStmtNode;
-import cn.koha.modelica.runtime.MoUndefined;
+import cn.koha.modelica.runtime.MoNull;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.Node;
@@ -21,6 +21,6 @@ public final class BlockStmtNode extends MoStmtNode {
         for(int i=0; i< last; i++){
             this.stmts[i].executeStatement(frame);
         }
-        return last < 0 ? MoUndefined.INSTANCE : this.stmts[last].executeStatement(frame);
+        return last < 0 ? MoNull.SINGLETON : this.stmts[last].executeStatement(frame);
     }
 }

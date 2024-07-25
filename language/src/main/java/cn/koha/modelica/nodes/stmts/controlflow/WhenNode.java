@@ -1,7 +1,7 @@
 package cn.koha.modelica.nodes.stmts.controlflow;
 
 import cn.koha.modelica.nodes.stmts.MoStmtNode;
-import cn.koha.modelica.runtime.MoUndefined;
+import cn.koha.modelica.runtime.MoNull;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 /**
@@ -10,6 +10,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 public class WhenNode extends MoStmtNode {
     @Override
     public Object executeStatement(VirtualFrame frame) {
-        return MoUndefined.INSTANCE;
+        return MoNull.SINGLETON;
     }
 }

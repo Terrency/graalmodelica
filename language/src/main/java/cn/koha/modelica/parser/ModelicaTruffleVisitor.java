@@ -48,11 +48,9 @@ import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.strings.TruffleString;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.atn.PredicateTransition;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,14 +96,24 @@ public class ModelicaTruffleVisitor extends Modelica0_3BaseVisitor<Node> {
     public MoStmtNode visitStatement_comma(Modelica0_3Parser.Statement_commaContext ctx) {
         if(ctx.children.size() == 1) {
             //直接输出
+            if(ctx.statement() != null) {
+                return parseStmt(ctx.statement());
+            } else {
+                return new ExprStmtNode(visitExpression(ctx.expression()));
+            }
         } else {
             //结果保存到内存
+            if(ctx.statement() != null) {
+                MoStmtNode stmtNode = parseStmt(ctx.statement());
+                if(stmtNode instanceof ExprStmtNode) {
+                    ((ExprStmtNode) stmtNode).setWithStatement(false);
+                }
+                return stmtNode;
+            } else {
+                return new ExprStmtNode(visitExpression(ctx.expression()), false);
+            }
         }
-        if(ctx.statement() != null) {
-            return parseStmt(ctx.statement());
-        } else {
-            return new ExprStmtNode(visitExpression(ctx.expression()));
-        }
+
     }
 
     public List<MoStmtNode> visitClassDefinition(Modelica0_3Parser.Class_definitionContext ctx) {

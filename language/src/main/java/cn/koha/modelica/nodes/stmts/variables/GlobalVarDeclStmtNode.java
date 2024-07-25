@@ -4,7 +4,7 @@ import cn.koha.modelica.common.DeclarationKind;
 import cn.koha.modelica.nodes.MoExprNode;
 import cn.koha.modelica.nodes.expr.GlobalScopeObjectExprNode;
 import cn.koha.modelica.nodes.stmts.MoStmtNode;
-import cn.koha.modelica.runtime.MoUndefined;
+import cn.koha.modelica.runtime.MoNull;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
@@ -28,6 +28,6 @@ public abstract class GlobalVarDeclStmtNode extends MoStmtNode {
     protected Object createVariable(DynamicObject globalScopeObject, Object value, @CachedLibrary("globalScopeObject")DynamicObjectLibrary objectLibrary) {
         String name = this.getName();
         objectLibrary.putWithFlags(globalScopeObject, name, value, 1);
-        return MoUndefined.INSTANCE;
+        return MoNull.SINGLETON;
     }
 }

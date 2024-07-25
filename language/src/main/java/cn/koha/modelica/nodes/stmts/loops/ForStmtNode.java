@@ -2,7 +2,7 @@ package cn.koha.modelica.nodes.stmts.loops;
 
 import cn.koha.modelica.nodes.MoExprNode;
 import cn.koha.modelica.nodes.stmts.MoStmtNode;
-import cn.koha.modelica.runtime.MoUndefined;
+import cn.koha.modelica.runtime.MoNull;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.LoopNode;
@@ -20,6 +20,6 @@ public class ForStmtNode extends MoStmtNode {
     @Override
     public Object executeStatement(VirtualFrame frame) {
         this.loopNode.execute(frame);
-        return MoUndefined.INSTANCE;
+        return MoNull.SINGLETON;
     }
 }

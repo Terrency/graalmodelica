@@ -37,6 +37,6 @@ public final class ModelicaFunctionObject extends ModelicaObject {
     @ExportMessage
     Object execute(Object[] arguments) {
         // for GraalVM polyglot calls, we never fill the receiver
-        return this.functionDispatchNode.executeDispatch(this, arguments, MoUndefined.INSTANCE);
+        return this.functionDispatchNode.executeDispatch(this, arguments, MoNull.SINGLETON);
     }
 }

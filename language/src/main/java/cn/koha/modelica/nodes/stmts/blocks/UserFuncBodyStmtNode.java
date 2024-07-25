@@ -1,7 +1,7 @@
 package cn.koha.modelica.nodes.stmts.blocks;
 
 import cn.koha.modelica.nodes.stmts.MoStmtNode;
-import cn.koha.modelica.runtime.MoUndefined;
+import cn.koha.modelica.runtime.MoNull;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 
@@ -16,6 +16,6 @@ public final class UserFuncBodyStmtNode extends MoStmtNode {
 
     @Override
     public Object executeStatement(VirtualFrame frame) {
-        return MoUndefined.INSTANCE;
+        return MoNull.SINGLETON;
     }
 }

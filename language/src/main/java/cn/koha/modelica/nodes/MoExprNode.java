@@ -2,7 +2,7 @@ package cn.koha.modelica.nodes;
 
 import cn.koha.modelica.nodes.stmts.ExprStmtNode;
 import cn.koha.modelica.nodes.stmts.MoStmtNode;
-import cn.koha.modelica.runtime.MoUndefined;
+import cn.koha.modelica.runtime.MoNull;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
@@ -22,7 +22,7 @@ public abstract class MoExprNode extends MoScopedNode {
 
     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {
         Object value = this.executeGeneric(frame);
-        if(value == MoUndefined.INSTANCE) {
+        if(value == MoNull.SINGLETON) {
             return false;
         }
         if(value instanceof Boolean) {
@@ -41,7 +41,7 @@ public abstract class MoExprNode extends MoScopedNode {
     }
 
     public Object evaluateAsReceiver(VirtualFrame frame) {
-        return MoUndefined.INSTANCE;
+        return MoNull.SINGLETON;
     }
     public Object evaluateAsFunction(VirtualFrame frame, Object receiver) {
         return this.executeGeneric(frame);

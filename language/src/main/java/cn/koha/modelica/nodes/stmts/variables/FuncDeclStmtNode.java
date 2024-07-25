@@ -6,7 +6,7 @@ import cn.koha.modelica.nodes.MoExprNode;
 import cn.koha.modelica.nodes.root.StmtBlockRootNode;
 import cn.koha.modelica.nodes.stmts.MoStmtNode;
 import cn.koha.modelica.nodes.stmts.blocks.UserFuncBodyStmtNode;
-import cn.koha.modelica.runtime.MoUndefined;
+import cn.koha.modelica.runtime.MoNull;
 import cn.koha.modelica.runtime.ModelicaFunctionObject;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.CompilerDirectives;
@@ -46,6 +46,6 @@ public abstract class FuncDeclStmtNode extends MoStmtNode {
                     shapesAndPrototypes.functionPrototype, callTarget, this.getArgumentCount());
         }
         objectLibrary.putConstant(containerObject, this.getFuncName(), this.cachedFunction, 0);
-        return MoUndefined.INSTANCE;
+        return MoNull.SINGLETON;
     }
 }
